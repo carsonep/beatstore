@@ -8,10 +8,9 @@ from base.models import Beat, Order, OrderItem, ShippingAddress
 from base.serializers import BeatSerializer, OrderSerializer
 
 from rest_framework import status
-from django.core.mail import EmailMessage
-
 from datetime import datetime
-from django.core.mail import send_mail
+from django.core.cache import cache
+from django.core.mail import EmailMessage
 
 
 @api_view(['POST'])
@@ -19,10 +18,7 @@ from django.core.mail import send_mail
 def addOrderItems(request):
     user = request.user
     data = request.data
-
     orderItems = data['orderItems']
-
-    print(data)
 
     if orderItems and len(orderItems) == 0:
         return Response({'detail': 'No Order Items'}, status=status.HTTP_400_BAD_REQUEST)
@@ -42,20 +38,26 @@ def addOrderItems(request):
             email=data['shippingAddress']['email'],
         )
         # (3) Create Order Items and set order to orderItem relationship
-
+        a=[]
         for i in orderItems:
             beat = Beat.objects.get(_id=i['product'])
 
+            
             item = OrderItem.objects.create(
                 beat=beat,
                 order=order,
                 name=beat.name,
                 price=i['price'],
+                file=beat.beat.url,
             )
-
+            a.append(str(item.file))
+            request.session['orderItems'] = a # set 'token' in the session
+            print(item.file)
+            
             beat.save()
 
-            
+        
+
         serializer = OrderSerializer(order, many=False)
         return Response(serializer.data)
 
@@ -89,12 +91,21 @@ def updateOrderToPaid(request, pk):
     order.save()
 
     user = request.user
-    data = request.data
+    orderItems = request.session['orderItems'] # get 'token' from the session
+  
+    body = ''
+    a=[]
 
-    print(user)
 
-    send_mail('Beats By Karu - @Prod.Karu', "test", "prodkaru@gmail.com", [user], fail_silently=False)
-    
+    for i in orderItems:    
+        body = 'http://127.0.0.1:8000' + i
+        a.append(body)
+
+    print(a)
+
+    message = EmailMessage('Beats By Karu - @Prod.Karu - Visit download link/links to download your beat!', "\n".join(a), "prodkaru@gmail.com", [user])
+
+    message.send()
 
     return Response("Order was paid")
 
