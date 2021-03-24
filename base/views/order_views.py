@@ -8,6 +8,11 @@ from base.models import Beat, Order, OrderItem, ShippingAddress
 from base.serializers import BeatSerializer, OrderSerializer
 
 from rest_framework import status
+from django.core.mail import EmailMessage
+
+from datetime import datetime
+from django.core.mail import send_mail
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -17,6 +22,7 @@ def addOrderItems(request):
 
     orderItems = data['orderItems']
 
+    print(data)
 
     if orderItems and len(orderItems) == 0:
         return Response({'detail': 'No Order Items'}, status=status.HTTP_400_BAD_REQUEST)
@@ -48,6 +54,7 @@ def addOrderItems(request):
             )
 
             beat.save()
+
             
         serializer = OrderSerializer(order, many=False)
         return Response(serializer.data)
@@ -68,6 +75,33 @@ def getOrderById(request, pk):
             Response({'detail': 'Not authorized to view this order'}, status=status.HTTP_400_BAD_REQUEST)
     except:
         Response({'detail': 'Order does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateOrderToPaid(request, pk):  
+    order = Order.objects.get(_id=pk)
+    
+    order.isPaid = True
+    order.paidAt = datetime.now()
+
+    order.save()
+
+    user = request.user
+    data = request.data
+
+    print(user)
+
+    send_mail('Beats By Karu - @Prod.Karu', "test", "prodkaru@gmail.com", [user], fail_silently=False)
+    
+
+    return Response("Order was paid")
+
+
+
+
+
 
 
 
