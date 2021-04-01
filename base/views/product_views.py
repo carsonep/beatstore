@@ -45,8 +45,6 @@ def updateProduct(request, pk):
     data = request.data
     beat = Beat.objects.get(_id=pk)
 
-    print(data)
-
     beat.name = data['name']
     beat.price = data['price']
     beat.scale = data['scale']

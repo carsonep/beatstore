@@ -114,7 +114,7 @@ def updateOrderToPaid(request, pk):
 
 
     for i in orderItems:    
-        body = 'http://127.0.0.1:8000' + i
+        body = i
         a.append(body)
 
     print(a)
