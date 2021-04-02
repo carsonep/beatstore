@@ -26,8 +26,6 @@ function OrderScreen({ match }) {
       .toFixed(2);
   }
 
-  // AbkqRrpx4e5p5Mhm_76hWcbkd4H2dDw73zUE45z9XTPNz5O8lZsPFsDjXumjtwDkaqPPyjnQ6DSxePN7
-
   const addPayPalScript = () => {
     const script = document.createElement("script");
     script.type = "text/javascript";
