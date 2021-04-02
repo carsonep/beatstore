@@ -52,11 +52,8 @@ def addOrderItems(request):
             )
             a.append(str(item.file))
             request.session['orderItems'] = a # set 'token' in the session
-            print(item.file)
             
             beat.save()
-
-        
 
         serializer = OrderSerializer(order, many=False)
         return Response(serializer.data)
@@ -116,8 +113,6 @@ def updateOrderToPaid(request, pk):
     for i in orderItems:    
         body = i
         a.append(body)
-
-    print(a)
 
     message = EmailMessage('Beats By Karu - @Prod.Karu - Visit download link/links to download your beat!', "\n".join(a), "prodkaru@gmail.com", [user])
 

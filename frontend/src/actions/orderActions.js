@@ -188,6 +188,13 @@ export const listOrders = (id) => async (dispatch, getState) => {
       type: ORDER_LIST_SUCCESS,
       payload: data,
     });
+
+    dispatch({
+      type: CART_CLEAR_ITEMS,
+      payload: data,
+    });
+
+    localStorage.removeItem("cartItems");
   } catch (error) {
     dispatch({
       type: ORDER_LIST_FAIL,

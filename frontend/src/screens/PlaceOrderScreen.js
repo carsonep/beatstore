@@ -27,15 +27,13 @@ function PlaceOrderScreen({ history }) {
     history.push("/payment");
   }
 
-  console.log(order);
-
   useEffect(() => {
     if (success) {
       history.push(`/order/${order._id}/`);
-
+      console.log(order);
       dispatch({ type: ORDER_CREATE_RESET });
     }
-  }, [success, history, dispatch, order._id]);
+  }, [success, history, dispatch, order]);
 
   const placeOrder = () => {
     dispatch(
