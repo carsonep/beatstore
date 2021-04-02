@@ -39,6 +39,9 @@ function OrderScreen({ match }) {
   };
 
   useEffect(() => {
+    if (!userInfo) {
+      history.push("login");
+    }
     if (!order || successPay || order._id !== Number(orderId)) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch(getOrderDetails(orderId));
