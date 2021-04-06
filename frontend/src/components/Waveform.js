@@ -26,6 +26,7 @@ const formWaveSurferOptions = (ref) => ({
   AudioContext: context || null,
   // audioScriptProcessor: processor || null,
   AudioProcessingEvent: processor || null,
+  backend: "MediaElement",
   // If true, normalize by the maximum peak instead of 1.0.
   normalize: true,
   // Use the PeakCache to improve rendering speed of large waveforms.
