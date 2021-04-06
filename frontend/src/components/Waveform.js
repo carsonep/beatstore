@@ -31,15 +31,6 @@ export default function Waveform({ url }) {
     (volume) => {
       setPlay(false);
 
-      if (isSafari) {
-        // Safari 11 or newer automatically suspends new AudioContext's that aren't
-        // created in response to a user-gesture, like a click or tap, so create one
-        // here (inc. the script processor)
-        let AudioContext = window.AudioContext || window.webkitAudioContext;
-        context = new AudioContext();
-        processor = context.createScriptProcessor(1024, 1, 1);
-      }
-
       const options = formWaveSurferOptions(waveformRef.current);
       wavesurfer.current = WaveSurfer.create(options);
 
@@ -51,6 +42,14 @@ export default function Waveform({ url }) {
           // https://wavesurfer-js.org/docs/methods.html
           // wavesurfer.current.play();
           // setPlay(true);
+          if (isSafari) {
+            // Safari 11 or newer automatically suspends new AudioContext's that aren't
+            // created in response to a user-gesture, like a click or tap, so create one
+            // here (inc. the script processor)
+            let AudioContext = window.AudioContext || window.webkitAudioContext;
+            context = new AudioContext();
+            processor = context.createScriptProcessor(1024, 1, 1);
+          }
 
           // make sure object stillavailable when file loaded
           if (wavesurfer.current) {
