@@ -22,12 +22,23 @@ export default function Waveform({ url }) {
   const wavesurfer = useRef(null);
   const [playing, setPlay] = useState(false);
   const [volume, setVolume] = useState(0.5);
+  let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  let context, processor;
 
   // create new WaveSurfer instance
   // On component mount and when url changes
   useEffect(
     (volume) => {
       setPlay(false);
+
+      if (isSafari) {
+        // Safari 11 or newer automatically suspends new AudioContext's that aren't
+        // created in response to a user-gesture, like a click or tap, so create one
+        // here (inc. the script processor)
+        let AudioContext = window.AudioContext || window.webkitAudioContext;
+        context = new AudioContext();
+        processor = context.createScriptProcessor(1024, 1, 1);
+      }
 
       const options = formWaveSurferOptions(waveformRef.current);
       wavesurfer.current = WaveSurfer.create(options);
