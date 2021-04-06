@@ -23,8 +23,9 @@ const formWaveSurferOptions = (ref) => ({
   barRadius: 3,
   responsive: true,
   height: 150,
-  audioContext: context || null,
-  audioScriptProcessor: processor || null,
+  AudioContext: context || null,
+  // audioScriptProcessor: processor || null,
+  AudioProcessingEvent: processor || null,
   // If true, normalize by the maximum peak instead of 1.0.
   normalize: true,
   // Use the PeakCache to improve rendering speed of large waveforms.
