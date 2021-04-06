@@ -2,6 +2,18 @@ import React, { useEffect, useRef, useState } from "react";
 
 import WaveSurfer from "wavesurfer.js";
 
+let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+let context, processor;
+
+if (isSafari) {
+  // Safari 11 or newer automatically suspends new AudioContext's that aren't
+  // created in response to a user-gesture, like a click or tap, so create one
+  // here (inc. the script processor)
+  var AudioContext = window.AudioContext || window.webkitAudioContext;
+  context = new AudioContext();
+  processor = context.createScriptProcessor(1024, 1, 1);
+}
+
 const formWaveSurferOptions = (ref) => ({
   container: ref,
   waveColor: "#ddd",
@@ -11,6 +23,8 @@ const formWaveSurferOptions = (ref) => ({
   barRadius: 3,
   responsive: true,
   height: 150,
+  audioContext: context || null,
+  audioScriptProcessor: processor || null,
   // If true, normalize by the maximum peak instead of 1.0.
   normalize: true,
   // Use the PeakCache to improve rendering speed of large waveforms.
@@ -22,19 +36,12 @@ export default function Waveform({ url }) {
   const wavesurfer = useRef(null);
   const [playing, setPlay] = useState(false);
   const [volume, setVolume] = useState(0.5);
-  // Only use MediaElement backend for Safari
-  const isSafari =
-    /^((?!chrome|android).)*safari/i.test(navigator.userAgent || "") ||
-    /iPad|iPhone|iPod/i.test(navigator.userAgent || "");
 
   // create new WaveSurfer instance
   // On component mount and when url changes
   useEffect(
     (volume) => {
       setPlay(false);
-      if (isSafari) {
-        wavesurfer.backend = "MediaElement";
-      }
 
       const options = formWaveSurferOptions(waveformRef.current);
       wavesurfer.current = WaveSurfer.create(options);
