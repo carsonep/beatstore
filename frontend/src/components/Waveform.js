@@ -26,7 +26,7 @@ const formWaveSurferOptions = (ref) => ({
   AudioContext: context || null,
   // audioScriptProcessor: processor || null,
   AudioProcessingEvent: processor || null,
-  // backend: "MediaElement",
+  // backend: ,
   // If true, normalize by the maximum peak instead of 1.0.
   normalize: true,
   // Use the PeakCache to improve rendering speed of large waveforms.
@@ -47,6 +47,7 @@ export default function Waveform({ url }) {
 
       const options = formWaveSurferOptions(waveformRef.current);
       wavesurfer.current = WaveSurfer.create(options);
+      options.backend = "MediaElement";
 
       wavesurfer.current.load(url);
 
