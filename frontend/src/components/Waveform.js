@@ -22,14 +22,19 @@ export default function Waveform({ url }) {
   const wavesurfer = useRef(null);
   const [playing, setPlay] = useState(false);
   const [volume, setVolume] = useState(0.5);
-  let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  let context, processor;
+  // Only use MediaElement backend for Safari
+  const isSafari =
+    /^((?!chrome|android).)*safari/i.test(navigator.userAgent || "") ||
+    /iPad|iPhone|iPod/i.test(navigator.userAgent || "");
 
   // create new WaveSurfer instance
   // On component mount and when url changes
   useEffect(
     (volume) => {
       setPlay(false);
+      if (isSafari) {
+        wavesurfer.backend = "MediaElement";
+      }
 
       const options = formWaveSurferOptions(waveformRef.current);
       wavesurfer.current = WaveSurfer.create(options);
@@ -42,14 +47,6 @@ export default function Waveform({ url }) {
           // https://wavesurfer-js.org/docs/methods.html
           // wavesurfer.current.play();
           // setPlay(true);
-          if (isSafari) {
-            // Safari 11 or newer automatically suspends new AudioContext's that aren't
-            // created in response to a user-gesture, like a click or tap, so create one
-            // here (inc. the script processor)
-            let AudioContext = window.AudioContext || window.webkitAudioContext;
-            context = new AudioContext();
-            processor = context.createScriptProcessor(1024, 1, 1);
-          }
 
           // make sure object stillavailable when file loaded
           if (wavesurfer.current) {
