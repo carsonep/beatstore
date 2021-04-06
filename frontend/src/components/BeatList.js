@@ -32,8 +32,14 @@ function BeatList({
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Table borderless size="sm">
-          <thead></thead>
+        <Table borderless hover size="sm">
+          <thead className="py-3">
+            <th></th>
+            <th></th>
+            <th style={{ width: "15%" }}>
+              Currently Selected: {selectedTrack.substring(48).split("_-_")[0]}
+            </th>
+          </thead>
           <tbody>
             {products.map((product, i) => (
               <tr

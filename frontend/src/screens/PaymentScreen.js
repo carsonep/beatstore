@@ -36,7 +36,9 @@ function PaymentScreen({ history }) {
           checked
           onChange={(e) => setPaymentMethod(e.target.value)}
         ></Form.Check>
-        <Button type="submit">Continue</Button>
+        <Button type="submit" className="my-3">
+          Continue
+        </Button>
       </Form>
     </FormContainer>
   );

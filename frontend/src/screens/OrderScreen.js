@@ -8,7 +8,7 @@ import Loader from "../components/Loader";
 import { getOrderDetails, payOrder } from "../actions/orderActions";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
 
-function OrderScreen({ match }) {
+function OrderScreen({ match, history }) {
   const orderId = match.params.id;
   const dispatch = useDispatch();
 
