@@ -9,7 +9,7 @@ if (isSafari) {
   // Safari 11 or newer automatically suspends new AudioContext's that aren't
   // created in response to a user-gesture, like a click or tap, so create one
   // here (inc. the script processor)
-  var AudioContext = window.AudioContext || window.webkitAudioContext;
+  let AudioContext = window.AudioContext || window.webkitAudioContext;
   context = new AudioContext();
   processor = context.createScriptProcessor(1024, 1, 1);
 }
@@ -23,10 +23,10 @@ const formWaveSurferOptions = (ref) => ({
   barRadius: 3,
   responsive: true,
   height: 150,
-  AudioContext: context || null,
-  // audioScriptProcessor: processor || null,
-  AudioProcessingEvent: processor || null,
-  // backend: ,
+  AudioContext: context,
+  // audioScriptProcessor: processor ,
+  AudioProcessingEvent: processor,
+  // backend: "MediaElement",
   // If true, normalize by the maximum peak instead of 1.0.
   normalize: true,
   // Use the PeakCache to improve rendering speed of large waveforms.
@@ -46,8 +46,8 @@ export default function Waveform({ url }) {
       setPlay(false);
 
       const options = formWaveSurferOptions(waveformRef.current);
+      // options.backend = "MediaElement";
       wavesurfer.current = WaveSurfer.create(options);
-      options.backend = "MediaElement";
 
       wavesurfer.current.load(url);
 
@@ -60,7 +60,7 @@ export default function Waveform({ url }) {
 
           // make sure object stillavailable when file loaded
           if (wavesurfer.current) {
-            wavesurfer.current.setVolume(volume);
+            // wavesurfer.current.setVolume(volume);
             setVolume(volume);
           }
         },
