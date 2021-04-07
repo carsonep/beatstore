@@ -34,11 +34,14 @@ function BeatList({
       ) : (
         <Table borderless hover size="sm">
           <thead className="py-3">
-            <th></th>
-            <th></th>
-            <th style={{ width: "15%" }}>
-              Currently Selected: {selectedTrack.substring(48).split("_-_")[0]}
-            </th>
+            <tr>
+              <th></th>
+              <th></th>
+              <th style={{ width: "15%" }}>
+                Currently Selected:{" "}
+                {selectedTrack.substring(48).split("_-_")[0]}
+              </th>
+            </tr>
           </thead>
           <tbody>
             {products.map((product, i) => (
